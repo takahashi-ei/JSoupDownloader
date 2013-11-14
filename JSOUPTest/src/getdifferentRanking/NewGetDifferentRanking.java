@@ -23,13 +23,26 @@ import StaticField.StaticFieldForDifferentRanking;
  * @author kakelab
  *
  */
-public class GetDifferentRanking {
+public class NewGetDifferentRanking {
 	public static void main(String[] args) throws IOException{
 		String oneFileName;
 		String compareFileName;
-		List<String> oneUrlLists = new ArrayList<String>();
-		List<String> compareUrlLists = new ArrayList<String>();
+		List<UrlAndSearchRankings> rankings = new ArrayList<UrlAndSearchRankings>();
 		List<String> queryLists = GetQuery.getQuery();
+		List<String> directoryName = GetDirectory.getDirectoryName();
+		int directoryCount = GetDirectory.getDirectoryCount();
+		for(int i = 0; i < queryLists.size();i++){
+			String query = queryLists.get(i);
+			for(int j = 0; j < directoryCount; j++){				
+				File file = getFile(query,directoryName.get(i));
+				changeRankings(rankings,file,i);
+			}
+			createDifferentFiles(rankings,query);
+		}
+		
+
+		
+	/*
 		for(int j = 0; j < queryLists.size(); j++){
 			String query = queryLists.get(j);
 			if(StaticFieldForDifferentRanking.G_FLAG){
@@ -64,9 +77,76 @@ public class GetDifferentRanking {
 		
 			findDifferent(oneUrlLists,compareUrlLists,query);
 		}
+	*/
 		
 	}
 	
+	private static void changeRankings(List<UrlAndSearchRankings> rankings,File file,int dayCount) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"utf-8"));
+		String line = null;
+		System.out.println(file);
+		int rank = 1;
+		while((line = br.readLine()) != null){
+			boolean isContain = false;
+			for(int i = 0; i < rankings.size(); i++){
+				System.out.println(line);
+				if(rankings.get(i).getUrl().equals(line)){
+					rankings.get(i).addRanking(rank);
+					isContain = true;
+				}
+			}
+			if(!isContain){
+				rankings.add(new UrlAndSearchRankings(line));
+				for(int i = 0; i < dayCount; i++){
+					rankings.get(rankings.size() - 1).addRanking(-1);
+				}
+				rankings.get(rankings.size() - 1).addRanking(rank);
+			}
+			
+			rank += 1;
+		}
+		
+		
+	}
+
+	/**
+	 * queryとfileNameからその引数に対応するfileを作る
+	 * 具体的には,directoryName // google // query + .txt
+	 * になる
+	 * @param query
+	 * @param directoryName
+	 * @return
+	 */
+	private static File getFile(String query,String directoryName){
+		String engine = StaticFieldForDifferentRanking.G_FLAG ? "google" : "yahoo";
+		String fileName = directoryName + File.separatorChar +
+				  engine + File.separatorChar +
+				  query + ".txt";
+		return new File(fileName);
+	}
+	
+	private static void createDifferentFiles(List<UrlAndSearchRankings> rankings,String query){
+		String fileName = StaticFieldForDifferentRanking.DATA_DIRECTORY + File.separatorChar +
+				          "different" + File.separatorChar +
+				          query + ".txt";
+
+		File differentWriteFile = new File(fileName);
+		differentWriteFile.getParentFile().mkdirs();
+		PrintWriter pageBak = null;
+		try {
+			pageBak = new PrintWriter( new BufferedWriter(new OutputStreamWriter(new FileOutputStream(differentWriteFile),"utf-8")));
+		} catch (UnsupportedEncodingException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+		for(int i = 0; i < rankings.size(); i++){
+			pageBak.print(rankings.get(i).output());
+		}
+		pageBak.close();
+	}
 	/**
 	 * 引数のファイルから,ファイルに書かれた内容を取り出したリストを作る
 	 * @param fileName

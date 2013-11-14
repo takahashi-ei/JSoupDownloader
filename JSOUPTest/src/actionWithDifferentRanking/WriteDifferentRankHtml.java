@@ -25,10 +25,16 @@ public class WriteDifferentRankHtml extends ActionWithDifferentRankingImp{
 		
 	}
 	
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
 	public void printBeforeHtml() throws IOException,FileNotFoundException{
 		int differentRank =  (afterRank > beforeRank) ? (afterRank - beforeRank) : (beforeRank - afterRank); 
-		File f = new File(StaticFieldForDifferentRanking.SAVE_DERECTORY + File.separatorChar
-				+ StaticFieldForDifferentRanking.QUERY + File.separatorChar
+		File f = new File("data" + File.separatorChar
+				+ StaticFieldForDifferentRanking.SAVE_DERECTORY + File.separatorChar
+				+ query + File.separatorChar
 				+ differentRank + "_" + beforeRank+ "_" + afterRank + File.separatorChar +
 				"before.html");
 		f.getParentFile().mkdirs();
@@ -53,11 +59,17 @@ public class WriteDifferentRankHtml extends ActionWithDifferentRankingImp{
 	
 	public void printAfterHtml() throws IOException,FileNotFoundException{
 		int differentRank = (afterRank > beforeRank) ? (afterRank - beforeRank) : (beforeRank - afterRank); 
-		File f = new File(StaticFieldForDifferentRanking.SAVE_DERECTORY + File.separatorChar
-				+ StaticFieldForDifferentRanking.QUERY + File.separatorChar
+		File f = new File("data" + File.separatorChar
+				+ StaticFieldForDifferentRanking.SAVE_DERECTORY + File.separatorChar
+				+ query + File.separatorChar
 				+ differentRank + "_"+ beforeRank+ "_" + afterRank + File.separatorChar +
 				"after.html");
-		f.getParentFile().mkdirs();
+		System.out.println("filePlace=" +"data" + File.separatorChar
+				+ StaticFieldForDifferentRanking.SAVE_DERECTORY + File.separatorChar
+				+ query + File.separatorChar
+				+ differentRank + "_"+ beforeRank+ "_" + afterRank + File.separatorChar +
+				"after.html");
+//		f.getParentFile().mkdirs();
 		PrintWriter out = null;
 		try {
 			out= new PrintWriter( new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f),getLetterCodeFromDoc(afterDoc))));

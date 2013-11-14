@@ -22,50 +22,61 @@ public abstract class ActionWithDifferentRankingImp {
 	int afterRank;
 	Document beforeDoc;
 	Document afterDoc;
+	//検索クエリを入れておく
+	String query;
 	
 	public void init(int beforeRank,int afterRank,String query){
 		this.beforeRank = beforeRank;
 		this.afterRank = afterRank;
 		String engine = StaticFieldForDifferentRanking.G_FLAG ? "google" : "yahoo";
-		this.beforeAllHtml = new File(StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
-				              query + File.separatorChar +
-				              engine + File.separatorChar +
+		this.beforeAllHtml = new File("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
+				engine + File.separatorChar +
+				              query + File.separatorChar +				              
 				              beforeRank + ".html"
 				              );
-		System.out.println(StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
-	              query + File.separatorChar +
-	              engine + File.separatorChar +
+		System.out.println("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
+				engine + File.separatorChar +
+	              query + File.separatorChar +	              
 	              beforeRank + ".html");
-		this.afterAllHtml =  new File(StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
-	              query + File.separatorChar +
-	              engine + File.separatorChar +
+		this.afterAllHtml =  new File("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
+				engine + File.separatorChar +
+	              query + File.separatorChar +	              
 	              afterRank + ".html"
 	              );
 		
-		System.out.println(StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
-	              query + File.separatorChar +
-	              engine + File.separatorChar +
+		System.out.println("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
+				engine + File.separatorChar +
+	              query + File.separatorChar +	              
 	              afterRank + ".html");
-		this.beforeBody = new File(StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
+		this.beforeBody = new File("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
+				engine + File.separatorChar +
+	              query + "_body" + File.separatorChar +	              
+	              beforeRank + ".txt"
+	              );
+		this.afterBody = new File("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
+	              engine + File.separatorChar +
 	              query + "_body" + File.separatorChar +
-	              engine + File.separatorChar +
 	              beforeRank + ".txt"
 	              );
-		this.afterBody = new File(StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
-	             query + "_body" + File.separatorChar +
-	              engine + File.separatorChar +
-	              beforeRank + ".txt"
-	              );
-		this.beforeHead = new File(StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
-	              query + "_head" + File.separatorChar +
-	              engine + File.separatorChar +
+		this.beforeHead = new File("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.ONE_FOLDER + File.separatorChar +
+	              engine + File.separatorChar +  
+				  query + "_head" + File.separatorChar +
 	              beforeRank + ".html"
 	              );
-		this.afterHead = new File(StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
+		this.afterHead = new File("data" + File.separatorChar + 
+				StaticFieldForDifferentRanking.OTHER_FOLDER + File.separatorChar +
+				  engine + File.separatorChar +
 	              query + "_head" + File.separatorChar +
-	              engine + File.separatorChar +
 	              beforeRank + ".html"
 	              );
+		this.query = query;
 		try {
 			if(beforeRank != -1)this.beforeDoc = Jsoup.parse(this.beforeAllHtml, "utf-8");
 			if(afterRank != -1)this.afterDoc = Jsoup.parse(this.afterAllHtml,"utf-8");
